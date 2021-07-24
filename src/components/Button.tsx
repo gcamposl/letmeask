@@ -1,21 +1,15 @@
-import { useState } from "react";
+import { ButtonHTMLAttributes } from 'react';
+//possibilita através do ctrl+space mostrar opções para serem usadas no button
+import '../styles/button.scss';
 
-export function Button() {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
+
+export function Button(props: ButtonProps) {
     //let -> let it change (Deixe me mudar)
     //const não pode ser alterada
     //let counter = 0;
-
-    const [counter, setCounter] = useState(0);
-
-    function increment() {
-        setCounter(counter + 1);
-        console.log(counter);
-    }
-
     return (
-        <button onClick={increment}>
-            {counter}
-        </button>
+        <button className="button" {...props} /> //spread operator - sintaxe de espalhamento
     )
 }
 
