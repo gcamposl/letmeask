@@ -1,5 +1,6 @@
+import userEvent from '@testing-library/user-event';
 import { FormEvent, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import illustrationImg from '../assets/images/illustration.svg';
 import logoImg from '../assets/images/logo.svg';
 
@@ -14,28 +15,31 @@ não for acessada, não tem porque carregar os arquivos de scss.
 
 // import { useContext } from 'react';
 // import { AuthContext } from '../contexts/AuthContexts';
-// import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 
 
 //webpack (snowpack, vite, ...)
 
 export function NewRoom() {
-    //  const { user } = useAuth();
-
+    const { user } = useAuth();
+    const history = useHistory();
     const [newRoom, setNewRoom] = useState('');
 
     async function handleCreateRoom(event: FormEvent) {
         event.preventDefault();
 
-        if (newRoom.trim() == '') {
+        if (newRoom.trim() === '') {// trim -> remove os espaços a direita e esquerda
             return;
         }
 
         const roomRef = database.ref('rooms');
 
-        const firebaseRoom = await roomRef.push({
-            //title: 
+        const firebaseRoom = await roomRef.push({//joga um info dentro rooms
+            title: newRoom,
+            authorId: user?.id
         })
+
+        history.push(`/rooms/${firebaseRoom.key}`)
     }
 
     return (
