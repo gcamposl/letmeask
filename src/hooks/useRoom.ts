@@ -1,6 +1,5 @@
-//cod de load da sala
-
 import { useEffect, useState } from "react";
+
 import { database } from "../services/firebase";
 import { useAuth } from "./useAuth";
 
@@ -27,7 +26,7 @@ type QuestionType = {
     isAnswered: boolean;
     isHighlighted: boolean;
     likeCount: number;
-    hasLiked: boolean;
+    likeId: string | undefined;
 }
 
 export function useRoom(roomId: string) {
@@ -50,8 +49,7 @@ export function useRoom(roomId: string) {
                     isHighlighted: value.isHighlighted,
                     isAnswered: value.isAnswered,
                     likeCount: Object.values(value.likes ?? {}).length,
-                    hasLiked: Object.values(value.likes ?? {}).some(like => like.authorId === user?.id)
-                    // some -> percorre o array até encontrar o que foi passado para ele
+                    likeId: Object.entries(value.likes ?? {}).find(([key, like]) => like.authorId === user?.id)?.[0],
                 }
             })
 
@@ -62,7 +60,7 @@ export function useRoom(roomId: string) {
         return () => {
             roomRef.off('value');
         }
-    }, [roomId, user?.id]);//array de dependencias
+    }, [roomId, user?.id]);
 
     return { questions, title }
 }
